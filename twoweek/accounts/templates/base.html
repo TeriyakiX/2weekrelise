@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-  {% block title %}<title>Local Library</title>{% endblock %}
+  {% block title %}<title>Bakery</title>{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -21,6 +21,12 @@
           <li class="item"><a href="{% url 'index' %}">Home</a></li>
           <li class="item"><a href="">Applications</a></li>
           <li class="item"><a href="">Profile</a></li>
+          {% if user.is_authenticated %}
+          <li class="user">{{ user.get_username }}</li>
+          <li class="item"><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+          {% else %}
+          <li class="item"><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+          {% endif %}
       </ul>
 
 </header>

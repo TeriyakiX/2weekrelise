@@ -53,3 +53,7 @@ a {
     display:flex;
     justify-content:center;
 }
+.user {
+    color: white;
+    padding: 15px;
+}
