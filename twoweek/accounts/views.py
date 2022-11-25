@@ -39,9 +39,15 @@ def profile(request):
         request,
         'registration/profile.html'
     )
+def login(request):
+    return render(
+        request,
+        'registration/profile.html'
+    )    
 
 class view_applications(generic.ListView):
     model = Application
+    template_name = 'aplications/application_list.html'
     paginate_by = 5
 
     def get_queryset(self):
@@ -68,7 +74,7 @@ class view_applications(generic.ListView):
 def get_error(request):
     return render(
         request,
-        'accounts/error.html'
+        'aplications/error.html'
     )
     
 class profile_main_applications(generic.ListView):
@@ -100,7 +106,7 @@ class create_application(CreateView):
 
 class detail_application(DetailView):
     model = Application
-    template_name = 'accounts/application_detail.html'
+    template_name = 'aplications/application_detail.html'
 
 
 class delete_application(DeleteView):
@@ -121,7 +127,7 @@ class delete_application(DeleteView):
 class update_application(UpdateView):
     model = Application
     fields = ('status', 'ready_design', 'category', 'comment')
-    template_name = 'accounts/application_update.html'
+    template_name = 'aplications/application_update.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

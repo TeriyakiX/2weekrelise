@@ -19,13 +19,15 @@
 
       <ul class="sidebar-nav">
           <li class="item"><a href="{% url 'index' %}">Home</a></li>
-          <li class="item"><a href="">Applications</a></li>
-          <li class="item"><a href="">Profile</a></li>
+          <li class="item"><a href="{% url 'profile_main_applications' %}" class="nav-link">Главная страница</a></li>
+          <li class="item"><a href="{% url 'profile_applications' %}">Applications</a></li>
           {% if user.is_authenticated %}
           <li class="user">{{ user.get_username }}</li>
+          <li class="item"><a href="{% url 'profile' %}">Profile</a></li>
           <li class="item"><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
           {% else %}
           <li class="item"><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+          <li class="item"><a href="{% url 'register'%}">Registrate</a></li>
           {% endif %}
       </ul>
 
