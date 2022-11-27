@@ -57,3 +57,8 @@ a {
     color: white;
     padding: 15px;
 }
+.controls {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}

@@ -79,6 +79,7 @@ def get_error(request):
     
 class profile_main_applications(generic.ListView):
     model = Application
+    template_name = 'aplications/application_list.html'
     paginate_by = 4
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -92,6 +93,7 @@ class profile_main_applications(generic.ListView):
 
 class create_application(CreateView):
     model = Application
+    template_name = 'aplications/application_form.html'
     fields = ('title', 'desc', 'img')
 
 
@@ -111,6 +113,7 @@ class detail_application(DetailView):
 
 class delete_application(DeleteView):
     model = Application
+    template_name = 'aplications/application_confirm_delete.html'
     success_url = reverse_lazy('profile_applications')
     success_msg = 'Запись удалена'
 
