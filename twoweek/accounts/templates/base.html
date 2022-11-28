@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-  {% block title %}<title>Bakery</title>{% endblock %}
+  {% block title %}<title>Designer</title>{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -19,8 +19,7 @@
 
       <ul class="sidebar-nav">
           <li class="item"><a href="{% url 'index' %}">Home</a></li>
-          <li class="item"><a href="{% url 'profile_main_applications' %}" class="nav-link">Information about applications</a></li>
-          <li class="item"><a href="{% url 'profile_applications' %}">Applications</a></li>
+          <li class="item"><a href="{% url 'profile_main_applications' %}" class="nav-link">Information Applications</a></li>
           {% if user.is_authenticated %}
           <li class="user">{{ user.get_username }}</li>
           <li class="item"><a href="{% url 'profile' %}">Profile</a></li>

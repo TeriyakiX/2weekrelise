@@ -1,28 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
+{% block links %}
+<link rel="stylesheet" href="{% static 'style.css'%}">
+{% endblock %}
 {% block content %}
-<h1>Bakery</h1>
+<h1></h1>
 
-  <p>Привествуем вас на <em>Сайте нашей пекарни</em>, Мы очень рады видеть вас здесь</p>
+  <p>Welcome to the<p><em>Website of our design company </em>, We are very glad to see you here</p>
 
 <h2>Dynamic content</h2>
 
-  <p>Заявки на выпечку</p>
-
+ <p>Application on the Designer</p>
 {% if application_list %}
 <ul>
     {% for application in application_list %}
-    <li class="my-3 p-3 bg-body rounded shadow-sm" >
+    <li>
         <div>
-            <a class="border-bottom pb-2 mb-0" href="{{ application.get_absolute_url }}">{{ application.title }}</a>
-            <div class="d-flex text-muted pt-3" bis_skin_checked="1">        
-              <p class="pb-3 mb-0 small lh-sm border-bottom pl-3">
+            <a href="{{ application.get_absolute_url }}">{{ application.title }}</a>
+            <div  bis_skin_checked="1">
+              <p>
                 {{ application.desc }}
               </p>
-              <img class="bd-placeholder-img flex-shrink-0 me-2 rounded"  src="..{{ application.img.url }}" alt="" width="50px" height="50px">
+              <img  src="../accounts{{ application.img.url }}" alt="" width="50px" height="50px">
             </div>
-            <small class="d-block text-end mt-3"> 
-              <a href="{% url 'profile_application_delete' application.id %}">Удалить</a>
+            <small>
               <p>{{ application.get_status_display }}, {{ application.get_category_display }} {% if user.is_staff %}Пользователь : {{ application.user.get_username }}{% endif %}</p>
             </small>
         </div>
@@ -31,6 +32,6 @@
 </ul>
 {% else %}
     <p>There are no applications.</p>
-{% endif %} 
+{% endif %}
 
 {% endblock %}

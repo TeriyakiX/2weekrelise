@@ -7,12 +7,15 @@ from django.views import generic
 from .models import Application
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
-from django.urls import reverse_lazy,reverse
+from django.urls import reverse_lazy, reverse
+
 
 def index(request):
+    application_list = Application.objects.all()
     return render(
-        request,'index.html',)
-        
+        request, 'index.html', {"application_list": application_list})
+
+
 def register(request):
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
@@ -24,26 +27,52 @@ def register(request):
             # Save the User object
             new_user.save()
             return render(request, 'registration/register_done.html', {'new_user': new_user})
-                
+
     else:
         user_form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'user_form': user_form})
+
 
 def password_reset(request):
     return render(
         request,
         'registration/password_reset.html'
     )
-def profile(request):
-    return render(
-        request,
-        'registration/profile.html'
-    )
+
+
+class profile(generic.ListView):
+    model = Application
+    template_name = 'registration/profile.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        ordering = self.request.GET.get('orderby')
+        if ordering == 'Выполнено':
+            ordering = 'ready'
+        elif ordering == 'Принято в работу':
+            ordering = 'load'
+        elif ordering == 'Новая':
+            ordering = 'new'
+        elif ordering == 'Все':
+            ordering = ''
+        if ordering == '' or ordering == None:
+            if self.request.user.is_staff:
+                return Application.objects.filter()
+            else:
+                return Application.objects.filter(user__exact=self.request.user.id)
+        else:
+            if self.request.user.is_staff:
+                return Application.objects.filter(status=ordering)
+            else:
+                return Application.objects.filter(user__exact=self.request.user.id, status=ordering)
+
+
 def login(request):
     return render(
         request,
         'registration/profile.html'
-    )    
+    )
+
 
 class view_applications(generic.ListView):
     model = Application
@@ -71,12 +100,14 @@ class view_applications(generic.ListView):
             else:
                 return Application.objects.filter(user__exact=self.request.user.id, status=ordering)
 
+
 def get_error(request):
     return render(
         request,
         'aplications/error.html'
     )
-    
+
+
 class profile_main_applications(generic.ListView):
     model = Application
     template_name = 'aplications/application_list.html'
@@ -87,23 +118,22 @@ class profile_main_applications(generic.ListView):
         context['count_of_load'] = Application.objects.filter(status='load').count()
         context['is_main'] = True;
         return context
-    
+
     def get_queryset(self):
         return Application.objects.filter(status='ready')
+
 
 class create_application(CreateView):
     model = Application
     template_name = 'aplications/application_form.html'
     fields = ('title', 'desc', 'img')
 
-
     def form_valid(self, form):
         fields = form.save(commit=False)
         fields.user = self.request.user
         fields.save()
-       
-        return super().form_valid(form)
 
+        return super().form_valid(form)
 
 
 class detail_application(DetailView):
@@ -126,6 +156,7 @@ class delete_application(DeleteView):
             success_url = reverse_lazy('profile_applications')
             success_msg = 'Запись удалена'
             return HttpResponseRedirect(success_url, success_msg)
+
 
 class update_application(UpdateView):
     model = Application
