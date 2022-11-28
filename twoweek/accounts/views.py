@@ -10,11 +10,18 @@ from django.views.generic import DetailView
 from django.urls import reverse_lazy, reverse
 
 
-def index(request):
-    application_list = Application.objects.all()
-    return render(
-        request, 'index.html', {"application_list": application_list})
+class Index(generic.ListView):
+    model = Application
+    template_name = 'index.html'
+    paginate_by = 5
 
+    def get_queryset(self):
+        return Application.objects.filter(status='ready')
+        
+    def index(request):
+        application_list = Application.objects.all()
+        return render(
+        request, 'index.html', {"application_list": application_list})
 
 def register(request):
     if request.method == 'POST':
@@ -129,7 +136,7 @@ class create_application(CreateView):
     fields = ('title', 'desc', 'img')
 
     def form_valid(self, form):
-        fields = form.save(commit=False)
+        fields = form.save(commit=True)
         fields.user = self.request.user
         fields.save()
 
@@ -162,6 +169,7 @@ class update_application(UpdateView):
     model = Application
     fields = ('status', 'ready_design', 'category', 'comment')
     template_name = 'aplications/application_update.html'
+    
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -169,13 +177,40 @@ class update_application(UpdateView):
             context['is_ready'] = True
             context['is_new'] = False
             context['is_load'] = False
+        
+            
         elif self.object.status == 'load':
             context['is_load'] = True
             context['is_new'] = False
             context['is_ready'] = False
+        
         elif self.object.status == 'new':
             context['is_new'] = True
             context['is_ready'] = False
             context['is_load'] = False
-
+        else:
+            self.object.save()
+            success_url = reverse_lazy('profile_applications')
+            success_msg = 'Запись обновлена'
+            return HttpResponseRedirect(success_url, success_msg)
         return context
+    
+
+    def form_valid(self, form):
+        print(self.object.status)
+
+        if self.object.status != 'ready':
+            return redirect('error_update')
+
+        else:
+            self.object.save()
+            success_url = reverse_lazy('profile_applications')
+            success_msg = 'Запись обновлена'
+            return HttpResponseRedirect(success_url, success_msg)
+            
+
+def get_error_update(request):
+    return render(
+        request,
+        'aplications/error_update.html'
+    )
