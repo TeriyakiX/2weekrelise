@@ -163,5 +163,19 @@
 </div>
 {% endif %}
 {% endif %}
+{% if request.user.is_authenticated %}
+<div>
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Предыдущая страница</a>
+  {% else %}
+    <a href="#">Предыдущая страница</a>
+  {% endif %}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Следуюшая страница</a>
+  {% else %}
+    <a href="#">Следуюшая страница</a>
+  {% endif %}
+</div>
+{% endif %}
 
 {%endblock%}

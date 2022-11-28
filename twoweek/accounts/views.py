@@ -118,7 +118,7 @@ def get_error(request):
 class profile_main_applications(generic.ListView):
     model = Application
     template_name = 'aplications/application_list.html'
-    paginate_by = 4
+    paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
